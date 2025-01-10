@@ -1,0 +1,4 @@
+{
+    "Constant": ["true", "false", "null", "e", "pi", "halfpi", "quarterpi", "deg2rad", "rad2deg", "self", "tau", "threehalvespi", "threequarterpi", "twopi", "vector0"],
+    "Keyword": ["if", "endif", "else", "while", "endwhile", "repeat", "do", "loop", "case", "endcase", "switch", "endswitch", "once", "endonce", "return", "break"]
+}

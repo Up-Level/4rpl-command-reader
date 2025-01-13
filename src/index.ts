@@ -28,8 +28,6 @@ async function processCommands(language: "4rpl" | "irpl") {
             description: ""
         };
 
-        if (!['i', 'j', 'k'].includes(command.name)) continue;
-
         const res = await axios.get(command.url);
         const root = nhp.parse(res.data);
         const content = root.querySelector(".page.group");
@@ -67,8 +65,6 @@ async function processCommands(language: "4rpl" | "irpl") {
             }
         };
 
-        console.log(command);
-
         commands.push(command);
 
         i += 1;
@@ -77,5 +73,5 @@ async function processCommands(language: "4rpl" | "irpl") {
         }
     }
 
-    fs.writeFileSync(`${language}-commandsa.json`, JSON.stringify(commands));
+    fs.writeFileSync(`${language}-commands.json`, JSON.stringify(commands));
 }

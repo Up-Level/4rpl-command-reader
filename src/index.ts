@@ -2,15 +2,16 @@ import * as fs from "fs";
 import axios from "axios";
 import * as nhp from "node-html-parser";
 
-import commandKinds from './data/command-kinds.json';
+import commandKinds4RPL from './data/4rpl-command-kinds.json';
+import commandKindsIRPL from './data/irpl-command-kinds.json'
 
-processCommands();
+processCommands("irpl");
 
-async function processCommands() {
+async function processCommands(language: "4rpl" | "irpl") {
     let commands = [];
 
-    const file = fs.readFileSync("src/data/commands.html", "utf-8");
-    const lines = file.split(/\r\n/)
+    const file = fs.readFileSync(`src/data/${language}-commands.html`, "utf-8");
+    const lines = file.split(/\r\n/);
 
     let i = 0;
     for (const line of lines) {
@@ -29,29 +30,34 @@ async function processCommands() {
 
         const res = await axios.get(command.url);
         const root = nhp.parse(res.data);
-
-        const displayName = root.querySelector(`#${command.name}`);
-        if (displayName != null) {
-            command.displayName = displayName.innerHTML;
+        const content = root.querySelector(".page.group");
+        if (content === null) {
+            console.error(`Could not find .page.group for ${command.name}.`);
+            return;
         }
 
-        let usage: nhp.HTMLElement | undefined;
+        const displayName = content.querySelector(`#${command.name.toLowerCase()}`);
+        if (displayName === null) {
+            console.error(`Could not find command name for ${command.name}.\n${JSON.stringify(command)}`);
+            return;
+        }
+        command.displayName = displayName.innerHTML;
 
-        let usageCandidates = root.querySelectorAll(".level1");
-        usage = usageCandidates.find(element => {
-            // Find the correct element with the level1 class, as sometimes the tab items also use level1.
-            return element.parentNode.classNames == "page group";
-        });
-        if (usage != undefined) command.usage = usage.innerText.trim();
+        const usage = content.querySelector(".level1");
+        if (usage !== null) command.usage = usage.innerText.trim();
 
-        const description = root.querySelector(".level2");
-        if (description != null) {
+        const description = content.querySelector(".level2");
+        if (description !== null) {
             let descriptionText = description.innerHTML.trim();
             // If urls are used in the description, then prepend them with the knucracker url so they work properly.
             descriptionText = descriptionText.replace("href=\"", "href=\"https://knucklecracker.com")
 
             command.description = descriptionText;
         }
+
+        let commandKinds;
+        if (language === "4rpl") commandKinds = commandKinds4RPL;
+        else                     commandKinds = commandKindsIRPL;
 
         for (const [key, value] of Object.entries(commandKinds)) {
             if (value.includes(command.name)) {
@@ -67,5 +73,5 @@ async function processCommands() {
         }
     }
 
-    fs.writeFileSync("commands.json", JSON.stringify(commands));
+    fs.writeFileSync(`${language}-commands.json`, JSON.stringify(commands));
 }

@@ -43,8 +43,11 @@ async function processCommands(language: "4rpl" | "irpl") {
         }
         command.displayName = displayName.innerHTML;
 
-        const usage = content.querySelector(".level1");
-        if (usage !== null) command.usage = usage.innerText.trim();
+        const usageCandidates = content.querySelectorAll(".level1");
+
+        // Tab elements also have the level1 class, so eliminate those
+        const usage = usageCandidates.find(candidate => candidate.tagName === "DIV");
+        if (usage !== undefined) command.usage = usage.innerText.trim();
 
         const description = content.querySelector(".level2");
         if (description !== null) {

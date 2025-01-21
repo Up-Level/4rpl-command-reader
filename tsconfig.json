@@ -9,8 +9,7 @@
 		"strict": true,
 		"rootDir": "src",
 		"esModuleInterop": true,
-		"resolveJsonModule": true,
-		"allowArbitraryExtensions": true
+		"resolveJsonModule": true
 	},
 	"exclude": ["node_modules", ".vscode-test"]
 }

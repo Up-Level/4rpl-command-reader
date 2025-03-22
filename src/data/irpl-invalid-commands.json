@@ -1,0 +1,19 @@
+[
+    "\n",
+    "$$Init_var (define hidden)",
+    "$init_var (define)",
+    "--! (RefDelete)",
+    "--varname (Delete)",
+    "->! (RefWrite)",
+    "->varname (Write)",
+    "-?! (RefExists)",
+    "-?varname (Exists)",
+    "<-! (Refread)",
+    "<-Varname (Read)",
+    "startsidebar",
+    "CR (Carriage Return)",
+    "DQ (Double Quote)",
+    "LF (Line Feed)",
+    "Function Call",
+    "Function Declaration"
+]
